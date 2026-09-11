@@ -1,4 +1,4 @@
-**Ventas_Tech_DB — Base de Datos de Ventas de Tecnología**
+# Pre-entrega 3 — Ventas_Tech_DB — Base de Datos de Ventas de Tecnología
 
 Autora: Estefanía Baleiron
 
