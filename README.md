@@ -64,11 +64,11 @@ Estructura de las Consultas:
 **Consulta 2**
   Clientes sin ventas (LEFT JOIN): Identificación de clientes registrados que aún no han realizado ninguna compra, mostrando nombre, email y fecha de registro mediante el uso de WHERE ... IS NULL. En este caso, todos los clientes ya realizaron al menos una compra, por lo cual no se muestra ningún resultado.
 
-**Consulta3**
-Productos sin ventas (LEFT JOIN): Identificación de artículos del catálogo que no tienen ninguna venta registrada, mostrando nombre del producto, categoría y precio mediante el uso de WHERE ... IS NULL. En este caso, todos los artículos ya tienen al menos una venta registrada, por lo cual no se muestra ningún resultado.
+**Consulta 3**
+  Productos sin ventas (LEFT JOIN): Identificación de artículos del catálogo que no tienen ninguna venta registrada, mostrando nombre del producto, categoría y precio mediante el uso de WHERE ... IS NULL. En este caso, todos los artículos ya tienen al menos una venta registrada, por lo cual no se muestra ningún resultado.
 
 **Consulta 4**
-Consolidado por canal (UNION ALL): Implementación de una CTE (VentasPorCanal) con dos SELECT separados para generar de forma literal las columnas de canal ('Presencial' y 'Online'), cerrando con un GROUP BY para totalizar la facturación y el recuento de operaciones sin eliminar filas repetidas.
+  Consolidado por canal (UNION ALL): Implementación de una CTE (VentasPorCanal) con dos SELECT separados para generar de forma literal las columnas de canal ('Presencial' y 'Online'), cerrando con un GROUP BY para totalizar la facturación y el recuento de operaciones sin eliminar filas repetidas.
 
 **Hallazgos Clave de Integración**
 
