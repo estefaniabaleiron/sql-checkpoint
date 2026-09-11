@@ -50,3 +50,30 @@ Al ejecutar las consultas sobre los datos transaccionales, se destacan las sigui
 3. **Volumen vs. Valor Monetario:** El id_producto = 2 lideró en volumen físico vendido (13 unidades), pero ocupó el 5° puesto en facturación debido a su menor precio unitario.
 
 ---
+
+# Pre-entrega 5 — Consultas con JOINs para el proyecto
+Autora: Estefanía Baleiron
+
+Script SQL (m5_consultas_joins.sql) enfocado en el cruce de tablas y uniones de conjuntos sobre la base de datos Ventas_Tech_DB para la empresa RetailPro, con el objetivo de crear una vista enriquecida para luego crear el tablero de PowerBI.
+
+Estructura de las Consultas:
+
+**Consulta 1**
+    Vista base del proyecto (INNER JOIN): Combinación de la tabla de ventas con las tablas dimensionales (clientes, productos y categorias) para obtener en una sola fila la fecha, identificación y ciudad del cliente, descripción del producto, categoría, cantidades, precios unitarios y total de venta.
+
+**Consulta 2**
+  Clientes sin ventas (LEFT JOIN): Identificación de clientes registrados que aún no han realizado ninguna compra, mostrando nombre, email y fecha de registro mediante el uso de WHERE ... IS NULL. En este caso, todos los clientes ya realizaron al menos una compra, por lo cual no se muestra ningún resultado.
+
+**Consulta3**
+Productos sin ventas (LEFT JOIN): Identificación de artículos del catálogo que no tienen ninguna venta registrada, mostrando nombre del producto, categoría y precio mediante el uso de WHERE ... IS NULL. En este caso, todos los artículos ya tienen al menos una venta registrada, por lo cual no se muestra ningún resultado.
+
+**Consulta 4**
+Consolidado por canal (UNION ALL): Implementación de una CTE (VentasPorCanal) con dos SELECT separados para generar de forma literal las columnas de canal ('Presencial' y 'Online'), cerrando con un GROUP BY para totalizar la facturación y el recuento de operaciones sin eliminar filas repetidas.
+
+**Hallazgos Clave de Integración**
+
+Vista para Power BI: El uso de INNER JOIN consolida todas las dimensiones clave del modelo en una sola tabla, la cual sirve para la construcción de métricas y filtros en el dashboard.
+
+Control de Inactividad: Las consultas con LEFT JOIN y filtros de nulidad nos permiten detectar de forma temprana clientes inactivos y artículos del catálogo sin movimiento registrados.
+
+Generación Artificial de Canales: Como la base de datos original no traía separadas las ventas por canal, usamos una CTE para unir los datos. Esto nos permite simular de dónde vino cada compra (presencial u online) sin perder el detalle de ninguna transacción individual.
