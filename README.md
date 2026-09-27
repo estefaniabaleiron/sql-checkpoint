@@ -77,3 +77,53 @@ Vista para Power BI: El uso de INNER JOIN consolida todas las dimensiones clave 
 Control de Inactividad: Las consultas con LEFT JOIN y filtros de nulidad nos permiten detectar de forma temprana clientes inactivos y artículos del catálogo sin movimiento registrados.
 
 Generación Artificial de Canales: Como la base de datos original no traía separadas las ventas por canal, usamos una CTE para unir los datos. Esto nos permite simular de dónde vino cada compra (presencial u online) sin perder el detalle de ninguna transacción individual.
+
+---
+
+# Pre-Entrega 6: Checkpoint - Pipeline ETL desde SQL/Excel con Power Query y Lenguaje M
+
+## Descripción del Proyecto
+En esta entrega se construyó el pipeline ETL (Extracción, Transformación y Carga) para la empresa **TechStore** en Power BI Desktop utilizando Power Query y lenguaje M. El objetivo principal fue diagnosticar, limpiar, transformar y documentar la base de datos para garantizar la consistencia e integridad referencial del modelo analítico.
+
+---
+
+## Resumen del Modelo de Datos (Control de Calidad)
+
+| Consulta | Tipo de Tabla | Filas Iniciales | Filas Finales | Estado / Transformaciones Principales |
+| :--- | :--- | :---: | :---: | :--- |
+| **`Dim_Clientes`** | Dimensión | 12 | **11** | Eliminación de duplicado por PK y tratamiento de nulos. |
+| **`Dim_Productos`** | Dimensión | 13 | **12** | Eliminación de duplicado por PK e imputación técnica de nulos. |
+| **`Dim_Categorias`** | Dimensión | 4 | **4** | Tabla maestra validada sin errores. |
+| **`Fact_Ventas`** | Tabla de Hechos | 50 | **50** | Enriquecida mediante Merge con `Dim_Productos`. |
+
+---
+
+## Detalle de Transformaciones y Justificación Técnica
+
+### 1. `Dim_Clientes`
+* **Eliminación de duplicados:** Se eliminó la fila duplicada evaluando estrictamente la clave primaria `id_cliente` (`id_cliente = 1`), garantizando la unicidad necesaria para establecer relaciones **1:N** coherentes en Power BI.
+* **Email nulo (`id_cliente = 9` - Valentina Paz):** Se reemplazó por `"Sin Email"`. No se eliminó el registro para conservar los datos de la cliente y no perder las transacciones de ventas históricas asociadas en `Fact_Ventas`.
+* **Ciudad nula (`id_cliente = 11` - Roberto Díaz):** Se reemplazó por `"Sin Dato"` para no borrar la fila del cliente y evitar espacios vacíos en los reportes o gráficos por ubicación geográfica.
+* **Tipado de datos:** Se convirtió `fecha_registro` a tipo `Fecha` (`Date`) para habilitar el filtrado y análisis a lo largo del tiempo.
+
+### 2. `Dim_Productos`
+* **Eliminación de duplicados:** Se eliminó el registro duplicado sobre la clave `id_producto` (`id_producto = 103`).
+* **Precio nulo (`id_producto = 109` - SSD Externo 1TB):** Se imputó el valor `130.00` identificando el precio unitario histórico registrado en las ventas de este producto dentro de `Fact_Ventas`.
+* **Categoría nula (`id_producto = 111` - Laptop Gaming Pro):** Se reemplazó directamente por `"Computación"`, infiriendo el valor desde su subcategoría `"Laptops"`.
+* **Tipado de datos:** Se configuró `precio` y `costo` como número decimal (`Decimal Number`) para garantizar cálculos de montos y márgenes sin errores.
+
+### 3. `Fact_Ventas`
+* **Combinación de consultas (Merge):** Se realizó un Merge (Izquierda externa) con `Dim_Productos` utilizando la columna común `id_producto`.
+* **Expansión acotada:** Se expandieron únicamente las columnas `nombre_producto` y `categoria` para enriquecer las transacciones sin recargar la tabla de hechos con información redundante.
+* **Tipado de datos:** Se ajustó `fecha_venta` a tipo `Fecha` (`Date`) para soportar la creación de líneas de tiempo en el modelo final.
+
+---
+
+## Documentación en Lenguaje M
+
+Las transformaciones fueron documentadas en el Editor Avanzado de Power Query mediante comentarios explícitos (`//`), detallando el razonamiento analítico detrás de cada decisión técnica aplicada en las consultas.
+
+---
+
+## Archivo de Entrega
+* **Archivo .pbix:** `Pipeline_ETL_Baleiron_Estefania.pbix`
