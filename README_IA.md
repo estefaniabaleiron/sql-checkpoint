@@ -226,5 +226,37 @@ Creación de la tabla dimensional `Dim_Calendario` integrada al modelo para sopo
 Todas las medidas se organizaron dentro de una tabla dedicada (`_Medidas`) para optimizar el mantenimiento del modelo:
 
 * **Ticket Promedio:**
-  ```dax
   Ticket Promedio = DIVIDE(SUM(Fact_Ventas[total_venta]), COUNT(Fact_Ventas[id_venta]))
+  *Objetivo:* Calcular el monto promedio monetario registrado por cada transacción individual[cite: 5].
+
+* **Tasa Clientes Recurrentes (%):**
+  Tasa Clientes Recurrentes = 
+  DIVIDE(
+      CALCULATE(
+          DISTINCTCOUNT(Fact_Ventas[id_cliente]), 
+          FILTER(VALUES(Fact_Ventas[id_cliente]), CALCULATE(COUNT(Fact_Ventas[id_venta])) > 1)
+      ), 
+      DISTINCTCOUNT(Fact_Ventas[id_cliente])
+  ) * 100
+  *Objetivo:* Determinar el porcentaje de la cartera que realiza más de una compra en el período analizado.
+
+* **Frecuencia Promedio de Compra:**
+  Frecuencia Promedio Compra = DIVIDE(COUNT(Fact_Ventas[id_venta]), DISTINCTCOUNT(Fact_Ventas[id_cliente]))
+  *Objetivo:* Medir la cantidad promedio de pedidos generados por cada cliente activo.
+
+* **Facturación Promedio por Cliente:**
+  Facturación Promedio por Cliente = DIVIDE(SUM(Fact_Ventas[total_venta]), DISTINCTCOUNT(Fact_Ventas[id_cliente]))
+  *Objetivo:* Determinar el nivel de ingreso medio producido por cliente activo.
+
+* **Facturación Total:**
+  Facturacion Total = SUM(Fact_Ventas[total_venta])
+  *Objetivo:* Obtener el volumen de ventas brutas acumulado en el negocio.
+
+**Conexión con el proyecto:** El modelo de datos y las medidas DAX permiten implementar y alimentar de forma dinámica el análisis definido en las etapas anteriores.
+
+
+---
+
+## Conclusión General
+
+El proyecto **RetailPro** integra todo el ciclo de vida de un desarrollo de Business Intelligence[cite: 1, 2, 3, 4, 5]. Permitió transformar requerimientos comerciales ambiguos en un modelo relacional normalizado en 3NF, construir una base de datos SQL consultable, depurar las fuentes mediante un pipeline ETL documentado en Power Query y estructurar un modelo analítico en Power BI con medidas DAX. Como resultado, la organización cuenta con un Dashboard Ejecutivo interactivo que responde de forma precisa a las causas de concentración de ventas en sus clientes VIP y proporciona visibilidad directa sobre la rentabilidad del negocio.
